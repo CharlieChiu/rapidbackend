@@ -1,0 +1,1 @@
+keytool -genkey -alias localhost -keysize 2048 -validity 36500 -keyalg RSA -dname "CN=localhost" -keypass changeit -storepass changeit -keystore certificate.jks

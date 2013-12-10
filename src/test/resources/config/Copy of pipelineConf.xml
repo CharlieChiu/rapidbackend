@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans 
+  xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:tx="http://www.springframework.org/schema/tx"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+<!-- please do not change this file unless you have hacked the related source code or you want to add your own commands-->
+<!-- remove prototype,we don't need that -->
+
+<bean id="GetFeedsPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="timeout" value="1200000"></property><!-- command timeout -->
+    <property name="pipelineName" value="GetFeedsPipeline"></property>
+    <property name="handlers">
+        <list>
+            <ref bean="ReadFeedCacheHandler"></ref>
+            <ref bean="LockFeedCacheHandler"></ref>
+            <ref bean="SelectFeedFromDbHandler"></ref>
+            <ref bean="UpdateFeedCacheHandler"/>
+            <ref bean="UnLockFeedCacheHandler"></ref>
+            
+            <ref bean="GetAllSeedFeedIdHandler"></ref>
+            <ref bean="ReadSeedFeedCacheHandler"></ref>
+            <ref bean="LockSeedFeedCacheHandler"></ref>
+            <ref bean="SelectSeedFeedFromDbHandler"></ref>
+            <ref bean="UpdateSeedFeedCacheHandler"/>
+            <ref bean="UnLockSeedFeedCacheHandler"></ref>
+            
+            <ref bean="GetAllFeedUserIdHandler"></ref>
+            <ref bean="ReadUserCacheHandler"></ref>
+            <ref bean="LockUserCacheHandler"></ref>
+            <ref bean="SelectUserFromDbHandler"></ref>
+            <ref bean="UpdateUserCacheHandler"/>
+            <ref bean="UnLockUserCacheHandler"></ref>
+            
+            <ref bean="ReadFeedRepostCounterHandler"/>
+            
+            <ref bean="MergeFeedResultHandler"/>
+            
+        </list>
+    </property>
+</bean>
+
+<bean id="HomeTimelinePipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="timeout" value="1200000"></property>
+    <property name="pipelineName" value="HomeTimelinePipeline"></property>
+    <property name="handlers">
+        <list>
+            <ref bean="GetInboxFeedIdListHandler"></ref>
+        </list>
+    </property>
+    <property name="appendedPipeline" ref="GetFeedsPipeline"></property>
+</bean>
+
+<bean id="PostFeedPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="timeout" value="1200000"></property>
+    <property name="pipelineName" value="PostFeedPipeline"></property>
+    <property name="handlers">
+        <list>
+            <ref bean="PostFeedHandler"></ref>
+        </list>
+    </property>
+</bean>
+<bean id="PostCommentPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="timeout" value="1200000"></property>
+    <property name="pipelineName" value="PostCommentPipeline"></property>
+    <property name="handlers">
+        <list>
+            <ref bean="PostFeedHandler"></ref>
+        </list>
+    </property>
+</bean>
+
+<bean id="SearchFeedPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="timeout" value="1200000"></property>
+    <property name="pipelineName" value="SearchFeedPipeline"></property>
+    <property name="handlers">
+        <list>
+            <ref bean="SearchFeedHandler"></ref>
+        </list>
+    </property>
+</bean>
+
+<!-- 
+<bean id="PostFeedPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="timeout" value="1200000"></property>
+    <property name="handlers">
+        <list>
+            <ref bean="PostFeedHandler"></ref>
+        </list>
+    </property>
+</bean>
+-->
+
+<!-- GetFeedsPipeline BEGIN -->
+<bean  id="ReadFeedCacheHandler" class="com.rapidbackend.core.process.handler.cache.ReadCacheHandler">
+    <property name="handlerName" value="ReadFeedCacheHandler"></property>
+    <property name="redisCache" ref="FeedCache"></property>
+    <property name="idListParamName" value="f"></property>
+    <property name="dBQueryIdListName" value="feedIdsInDbQuery"></property>
+    <property name="handlerResultContainerObjectName" value="feeds"></property>
+    <property name="modelClassName" value="Feed"></property>
+</bean>
+<bean  id="LockFeedCacheHandler" class="com.rapidbackend.core.process.handler.cache.LockCacheHandler">
+    <property name="handlerName" value="LockFeedCacheHandler"></property>
+    <property name="redisCache" ref="FeedCache"></property>
+    <property name="lockIdListName" value="feedIdsInDbQuery"></property>
+</bean>
+<bean  id="SelectFeedFromDbHandler" class="com.rapidbackend.socialutil.process.handler.db.SelectMultipleDbRecordsHandler">
+    <property name="handlerName" value="SelectFeedFromDbHandler"></property>
+    <property name="dao" ref="FeedDao"></property>
+    <property name="dBQueryIdListName" value="feedIdsInDbQuery"></property>
+    <property name="handlerResultContainerObjectName" value="feeds"></property>
+    <property name="previousHandlerResultContainerObjectName" value="feeds"></property>
+    <property name="modelClassName" value="Feed"></property>
+</bean>
+<bean  id="UpdateFeedCacheHandler" class="com.rapidbackend.core.process.handler.cache.UpdateCacheHandler">
+    <property name="handlerName" value="UpdateFeedCacheHandler"></property>
+    <property name="redisCache" ref="FeedCache"></property>
+    <property name="dBQueryIdListName" value="feedIdsInDbQuery"></property>
+    <property name="previousHandlerResultContainerObjectName" value="feeds"></property>
+</bean>
+<bean  id="UnLockFeedCacheHandler" class="com.rapidbackend.core.process.handler.cache.UnlockCacheHandler">
+    <property name="handlerName" value="UnLockFeedCacheHandler"></property>
+    <property name="redisCache" ref="FeedCache"></property>
+    <property name="unlockIdListName" value="feedIdsInDbQuery"></property>
+</bean>
+<bean  id="GetAllSeedFeedIdHandler" class="com.rapidbackend.socialutil.process.handler.merge.GetAllSeedFeedIdHandler">
+    <property name="handlerName" value="GetAllSeedFeedIdHandler"></property>
+    <property name="previousHandlerResultContainerObjectName" value="feeds"></property>
+    <property name="handlerResultContainerObjectName" value="seedFeedId"></property>
+</bean>
+<bean  id="ReadSeedFeedCacheHandler" class="com.rapidbackend.core.process.handler.cache.ReadCacheHandler">
+    <property name="handlerName" value="ReadFeedCacheHandler"></property>
+    <property name="redisCache" ref="FeedCache"></property>
+    <property name="idListParamName" value="seedFeedId"></property>
+    <property name="dBQueryIdListName" value="seedFeedIdInDbQuery"></property>
+    <property name="handlerResultContainerObjectName" value="seedFeeds"></property><!-- be carefull should not overwrite 'feeds' result -->
+    <property name="modelClassName" value="Feed"></property>
+</bean>
+<bean  id="LockSeedFeedCacheHandler" class="com.rapidbackend.core.process.handler.cache.LockCacheHandler">
+    <property name="handlerName" value="LockSeedFeedCacheHandler"></property>
+    <property name="redisCache" ref="FeedCache"></property>
+    <property name="lockIdListName" value="seedFeedIdInDbQuery"></property>
+</bean>
+<bean  id="SelectSeedFeedFromDbHandler" class="com.rapidbackend.socialutil.process.handler.db.SelectMultipleDbRecordsHandler">
+    <property name="handlerName" value="SelectSeedFeedFromDbHandler"></property>
+    <property name="dao" ref="FeedDao"></property>
+    <property name="dBQueryIdListName" value="seedFeedIdInDbQuery"></property>
+    <property name="handlerResultContainerObjectName" value="seedFeeds"></property><!-- be carefull should not overwrite 'feeds' result -->
+    <property name="previousHandlerResultContainerObjectName" value="feeds"></property>
+    <property name="modelClassName" value="Feed"></property>
+</bean>
+<bean  id="UpdateSeedFeedCacheHandler" class="com.rapidbackend.core.process.handler.cache.UpdateCacheHandler">
+    <property name="handlerName" value="UpdateSeedFeedCacheHandler"></property>
+    <property name="redisCache" ref="FeedCache"></property>
+    <property name="dBQueryIdListName" value="seedFeedIdInDbQuery"></property>
+    <property name="previousHandlerResultContainerObjectName" value="feeds"></property>
+</bean>
+<bean  id="UnLockSeedFeedCacheHandler" class="com.rapidbackend.core.process.handler.cache.UnlockCacheHandler">
+    <property name="handlerName" value="UnLockSeedFeedCacheHandler"></property>
+    <property name="redisCache" ref="FeedCache"></property>
+    <property name="unlockIdListName" value="seedFeedIdInDbQuery"></property>
+</bean>
+
+<bean  id="GetAllFeedUserIdHandler" class="com.rapidbackend.socialutil.process.handler.merge.GetAllFeedUserIdHandler">
+    <property name="handlerName" value="GetAllFeedUserIdHandler"></property>
+    <property name="previousHandlerResultContainerObjectName" value="feeds"></property>
+    <property name="handlerResultContainerObjectName" value="u"></property>
+</bean>
+<bean  id="ReadUserCacheHandler" class="com.rapidbackend.core.process.handler.cache.ReadCacheHandler">
+    <property name="handlerName" value="ReadUserCacheHandler"></property>
+    <property name="redisCache" ref="UserCache"></property>
+    <property name="idListParamName" value="u"></property>
+    <property name="dBQueryIdListName" value="userIdsInDbQuery"></property>
+    <property name="handlerResultContainerObjectName" value="users"></property>
+    <property name="modelClassName" value="user"></property>
+</bean>
+<bean  id="LockUserCacheHandler" class="com.rapidbackend.core.process.handler.cache.LockCacheHandler">
+    <property name="handlerName" value="LockUserCacheHandler"></property>
+    <property name="redisCache" ref="UserCache"></property>
+    <property name="lockIdListName" value="userIdsInDbQuery"></property>
+</bean>
+<bean  id="SelectUserFromDbHandler" class="com.rapidbackend.socialutil.process.handler.db.SelectMultipleDbRecordsHandler">
+    <property name="handlerName" value="SelectUserFromDbHandler"></property>
+    <property name="dao" ref="UserDao"></property>
+    <property name="dBQueryIdListName" value="userIdsInDbQuery"></property>
+    <property name="handlerResultContainerObjectName" value="users"></property>
+    <property name="previousHandlerResultContainerObjectName" value="users"></property>
+    <property name="modelClassName" value="user"></property>
+</bean>
+<bean  id="UpdateUserCacheHandler" class="com.rapidbackend.core.process.handler.cache.UpdateCacheHandler">
+    <property name="handlerName" value="UpdateUserCacheHandler"></property>
+    <property name="redisCache" ref="UserCache"></property>
+    <property name="dBQueryIdListName" value="userIdsInDbQuery"></property>
+    <property name="previousHandlerResultContainerObjectName" value="users"></property>
+</bean>
+<bean  id="UnLockUserCacheHandler" class="com.rapidbackend.core.process.handler.cache.UnlockCacheHandler">
+    <property name="handlerName" value="UnLockUserCacheHandler"></property>
+    <property name="redisCache" ref="UserCache"></property>
+    <property name="unlockIdListName" value="userIdsInDbQuery"></property>
+</bean>
+<bean  id="ReadFeedRepostCounterHandler" class="com.rapidbackend.core.process.handler.counter.ReadFeedMetadataHandler">
+    <property name="handlerName" value="ReadFeedRepostCounterHandler"></property>
+    <property name="metadataResultContainerObjectName" value="feedMetadata"></property><!-- the hashmap which stores all metadatas -->
+    <property name="intKeyListParamName" value="f"></property>
+    <property name="counterField" value="repostCount"></property>
+    <property name="redisCounterTarget" value="metadataCounter"></property>
+</bean>
+<bean  id="MergeFeedResultHandler" class="com.rapidbackend.socialutil.process.handler.merge.MergeFeedResultHandler">
+    <property name="handlerName" value="MergeFeedResultHandler"></property>
+    <property name="idListParamName" value="f"></property><!-- input id list name -->
+</bean>
+<!-- GetFeedsPipeline END -->
+
+<!-- HomeTimeline Begin -->
+<bean  id="GetInboxFeedIdListHandler" class="com.rapidbackend.socialutil.process.handler.inbox.GetInboxFeedIdListHandler">
+    <property name="handlerName" value="GetInboxFeedIdListHandler"></property>
+    <property name="idParamName" value="userId"></property>
+    <property name="handlerResultContainerObjectName" value="f"></property>
+</bean>
+<!-- HomeTimeline End -->
+
+<!-- PostFeed Begin -->
+<bean  id="PostFeedHandler" class="com.rapidbackend.socialutil.process.handler.feeds.PostFeedHandler">
+    <property name="handlerName" value="PostFeedHandler"></property>
+    <property name="setCreatedRecordAsResponse" value="true"></property>
+    <property name="handlerResultContainerObjectName" value="feed"></property>
+    <property name="dao" ref="FeedDao"></property>
+    <property name="modelClassName" value="Feed"></property>
+</bean>
+<!-- PostFeed End -->
+<!-- PostComment Begin -->
+<bean id="PostCommentHandler" class="com.rapidbackend.socialutil.process.handler.db.CreateSingleDbRecordHandler">
+    <property name="handlerName" value="PostCommentHandler"></property>
+    <property name="setCreatedRecordAsResponse" value="true"></property>
+    <property name="handlerResultContainerObjectName" value="comment"></property>
+    <property name="dao" ref="CommentDao"></property>
+    <property name="modelClassName" value="Comment"></property>
+</bean>
+<!-- PostComment End -->
+<!-- SearchFeed Begin -->
+<bean id="SearchFeedHandler" class="com.rapidbackend.socialutil.process.handler.search.SearchFeedHandler">
+    <property name="handlerName" value="SearchFeedHandler"></property>
+</bean>
+<!-- SearchFeed End -->
+<!-- SearchUser Begin -->
+<bean id="SearchUserHandler" class="com.rapidbackend.socialutil.process.handler.search.SearchUserHandler">
+    <property name="handlerName" value="SearchUserHandler"></property>
+</bean>
+<!-- SearchUser End -->
+<!-- Handler Interceptors Begin -->
+</beans>

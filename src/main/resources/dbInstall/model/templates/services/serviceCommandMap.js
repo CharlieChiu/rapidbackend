@@ -1,0 +1,35 @@
+{
+  "/Login" : "Login",
+  "/Logout": "Logout",
+  "/PostUserFeed": "PostUserFeed",
+  "/RepostUserFeed": "RepostUserFeed",
+  "/SubscribeUser": "SubscribeUser",
+  "/UnsubscribeUser": "UnsubscribeUser",
+  "/GetUserFollower": "GetUserFollower",
+  "/UserFeedTimeline":"UserFeedTimeline",
+  "/ReadUserFeed":"ReadUserFeed",
+  "/DeleteUserFeed":"DeleteUserFeed",
+  "/ReadFeedByUser":"ReadFeedByUser",
+  "/ReadUserFeedMetadata":"ReadUserFeedMetadata",
+  "/ReadUserFeedReposts":"ReadUserFeedReposts",
+  "/UpdateUserFeed":"UpdateUserFeed",
+  "/CommentUserFeed":"CommentUserFeed",
+  "/ReadUserFeedComment":"ReadUserFeedComment"
+  <#if followableName??>
+  ,
+  "/Post${followableName}Feed": "Post${followableName}Feed",
+  "/Repost${followableName}Feed": "Repost${followableName}Feed",
+  "/Subscribe${followableName}": "Subscribe${followableName}",
+  "/Unsubscribe${followableName}": "Unsubscribe${followableName}",
+  "/Get${followableName}Follower": "Get${followableName}Follower",
+  "/${followableName}FeedTimeline":"${followableName}FeedTimeline",
+  "/Read${followableName}Feed":"Read${followableName}Feed",
+  "/Delete${followableName}Feed":"Delete${followableName}Feed",
+  "/ReadFeedBy${followableName}":"ReadFeedBy${followableName}",
+  "/Read${followableName}FeedMetadata":"Read${followableName}FeedMetadata",
+  "/Read${followableName}FeedReposts":"Read${followableName}FeedReposts",
+  "/Update${followableName}Feed":"Update${followableName}Feed",
+  "/Comment${followableName}Feed":"Comment${followableName}Feed",
+  "/Read${followableName}FeedComment":"Read${followableName}FeedComment"
+  </#if>
+}

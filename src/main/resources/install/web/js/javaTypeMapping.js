@@ -1,0 +1,1 @@
+{"varchar":"String","int":"Integer","long":"Long","float":"Float","text":"String"}

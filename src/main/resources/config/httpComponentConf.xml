@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans 
+  xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:tx="http://www.springframework.org/schema/tx"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+<context:annotation-config />
+<bean id="WebServer" class="com.rapidbackend.webserver.netty.NettyHttpServer">
+<property name="configuration" ref="NettyConf" />
+</bean>
+<bean id="NettyConf" class="com.rapidbackend.webserver.netty.NettyConf">
+<property name="uploadConf" ref="UploadConf"></property>
+<property name="useSSL" value="false"></property>
+<property name="forkHandlerThread" value="false"></property><!-- set this to true on multi-core machine to avoid blocking netty worker threads -->
+</bean>
+<bean id="UploadConf" class="com.rapidbackend.webserver.netty.UploadConf">
+</bean>
+<!-- 
+<bean id="NettyHttpHandler" class="com.rapidbackend.webserver.netty.handler.PrintHeaderHandler">
+</bean>
+-->
+<bean id="NettyHttpHandler" class="com.rapidbackend.webserver.netty.handler.DefaultHttpHandler" scope="prototype">
+<property name="commandDispatcher" ref="CommandDispatcher"></property>
+<property name="requestDataFilterFactory" ref="RequestDataFilterFactory"></property>
+<property name="nettyConf" ref="NettyConf"></property>
+</bean>
+
+<bean id="CommandDispatcher" class="com.rapidbackend.webserver.netty.command.DefaultCommandDispatcher">
+</bean>
+
+<bean id="RequestDataFilterFactory" class="com.rapidbackend.webserver.netty.request.data.RequestDataFilterFactory">
+<property name="filterCache">
+<map>
+        <entry key="testUpload"><!-- specify data filter against commands -->
+        <ref bean="RenameAttachmentFilter" />
+        </entry>
+</map>
+</property>
+</bean>
+
+<bean id="RenameAttachmentFilter" class="com.rapidbackend.webserver.netty.request.data.RenameAttachmentFilter">
+<property name="storeStrategy" ref="SimpleAttachmentRenamer"></property>
+</bean>
+<bean id="SimpleAttachmentRenamer" class="com.rapidbackend.webserver.netty.request.data.SimpleAttachmentRenamer">
+<property name="baseStoreDir" value="fileupload"></property>
+</bean>
+
+<bean id="HttpClientConf" class="com.rapidbackend.client.http.HttpClientConf">
+</bean>
+
+</beans>

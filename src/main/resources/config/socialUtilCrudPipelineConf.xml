@@ -1,0 +1,869 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans 
+  xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:tx="http://www.springframework.org/schema/tx"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+<!-- please do not change this file unless you have hacked the related source code or you want to add your own commands-->
+<!--START  create commands for model Profiles  -->
+<bean id="CreateProfilesSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value=""></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Profiles"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="UpdateProfilesSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="id"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Profiles"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="ReadProfilesSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="id"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Profiles"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="DeleteProfilesSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="id"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Profiles"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="QueryProfilesSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="modelQuery"></property>
+  <property name="optionalParams" value="start,pageSize,idOrder"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Profiles"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="CreateProfilesPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="CreateProfilesHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="CreateProfilesHandler" class="com.rapidbackend.socialutil.process.handler.db.CreateSingleDbRecordHandler"><!-- create one Profiles in database-->
+    <property name="dao" ref="ProfilesDao"></property>
+    <property name="interceptors">
+        <list>        </list>
+    </property>
+</bean>
+
+<bean id="ReadProfilesPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="ReadProfilesHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="ReadProfilesHandler" class="com.rapidbackend.socialutil.process.handler.db.SelectSingleDbRecordHandler"><!-- read one Profiles in database-->
+    <property name="dao" ref="ProfilesDao"></property>
+</bean>
+
+<bean id="UpdateProfilesPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="UpdateProfilesHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="UpdateProfilesHandler" class="com.rapidbackend.socialutil.process.handler.db.UpdateSingleDbRecordHandler"><!-- update one Profiles in database-->
+    <property name="dao" ref="ProfilesDao"></property>
+</bean>
+
+<bean id="DeleteProfilesPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="DeleteProfilesHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="DeleteProfilesHandler" class="com.rapidbackend.socialutil.process.handler.db.DeleteSingleDbRecordHandler"><!-- delete one Profiles in database-->
+    <property name="dao" ref="ProfilesDao"></property>
+</bean>
+
+<bean id="QueryProfilesPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="QueryProfilesHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="QueryProfilesHandler" class="com.rapidbackend.socialutil.process.handler.db.QueryDbRecordHandler"><!-- read one Profiles in database-->
+    <property name="dao" ref="ProfilesDao"></property>
+</bean>
+<!--END  create commands for model Profiles  -->
+<!--START  create commands for model City  -->
+<bean id="CreateCitySchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value=""></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="City"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="UpdateCitySchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="id"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="City"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="ReadCitySchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="id"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="City"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="DeleteCitySchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="id"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="City"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="QueryCitySchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="modelQuery"></property>
+  <property name="optionalParams" value="start,pageSize,idOrder"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="City"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="CreateCityPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="CreateCityHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="CreateCityHandler" class="com.rapidbackend.socialutil.process.handler.db.CreateSingleDbRecordHandler"><!-- create one City in database-->
+    <property name="dao" ref="CityDao"></property>
+    <property name="interceptors">
+        <list>        </list>
+    </property>
+</bean>
+
+<bean id="ReadCityPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="ReadCityHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="ReadCityHandler" class="com.rapidbackend.socialutil.process.handler.db.SelectSingleDbRecordHandler"><!-- read one City in database-->
+    <property name="dao" ref="CityDao"></property>
+</bean>
+
+<bean id="UpdateCityPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="UpdateCityHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="UpdateCityHandler" class="com.rapidbackend.socialutil.process.handler.db.UpdateSingleDbRecordHandler"><!-- update one City in database-->
+    <property name="dao" ref="CityDao"></property>
+</bean>
+
+<bean id="DeleteCityPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="DeleteCityHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="DeleteCityHandler" class="com.rapidbackend.socialutil.process.handler.db.DeleteSingleDbRecordHandler"><!-- delete one City in database-->
+    <property name="dao" ref="CityDao"></property>
+</bean>
+
+<bean id="QueryCityPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="QueryCityHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="QueryCityHandler" class="com.rapidbackend.socialutil.process.handler.db.QueryDbRecordHandler"><!-- read one City in database-->
+    <property name="dao" ref="CityDao"></property>
+</bean>
+<!--END  create commands for model City  -->
+<!--START  create commands for model Oauthapplication  -->
+<bean id="CreateOauthapplicationSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="callbackUrl,consumerKey,name,sourceUrl"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Oauthapplication"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="UpdateOauthapplicationSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="id"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Oauthapplication"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="ReadOauthapplicationSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="id"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Oauthapplication"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="DeleteOauthapplicationSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="id"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Oauthapplication"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="QueryOauthapplicationSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="modelQuery"></property>
+  <property name="optionalParams" value="start,pageSize,idOrder"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Oauthapplication"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="CreateOauthapplicationPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="CreateOauthapplicationHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="CreateOauthapplicationHandler" class="com.rapidbackend.socialutil.process.handler.db.CreateSingleDbRecordHandler"><!-- create one Oauthapplication in database-->
+    <property name="dao" ref="OauthapplicationDao"></property>
+    <property name="interceptors">
+        <list>        </list>
+    </property>
+</bean>
+
+<bean id="ReadOauthapplicationPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="ReadOauthapplicationHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="ReadOauthapplicationHandler" class="com.rapidbackend.socialutil.process.handler.db.SelectSingleDbRecordHandler"><!-- read one Oauthapplication in database-->
+    <property name="dao" ref="OauthapplicationDao"></property>
+</bean>
+
+<bean id="UpdateOauthapplicationPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="UpdateOauthapplicationHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="UpdateOauthapplicationHandler" class="com.rapidbackend.socialutil.process.handler.db.UpdateSingleDbRecordHandler"><!-- update one Oauthapplication in database-->
+    <property name="dao" ref="OauthapplicationDao"></property>
+</bean>
+
+<bean id="DeleteOauthapplicationPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="DeleteOauthapplicationHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="DeleteOauthapplicationHandler" class="com.rapidbackend.socialutil.process.handler.db.DeleteSingleDbRecordHandler"><!-- delete one Oauthapplication in database-->
+    <property name="dao" ref="OauthapplicationDao"></property>
+</bean>
+
+<bean id="QueryOauthapplicationPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="QueryOauthapplicationHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="QueryOauthapplicationHandler" class="com.rapidbackend.socialutil.process.handler.db.QueryDbRecordHandler"><!-- read one Oauthapplication in database-->
+    <property name="dao" ref="OauthapplicationDao"></property>
+</bean>
+<!--END  create commands for model Oauthapplication  -->
+<!--START  create commands for model Oauthapplicationuser  -->
+<bean id="CreateOauthapplicationuserSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="applicationId,screenName,uid,userId"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Oauthapplicationuser"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="UpdateOauthapplicationuserSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="id"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Oauthapplicationuser"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="ReadOauthapplicationuserSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="id"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Oauthapplicationuser"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="DeleteOauthapplicationuserSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="id"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Oauthapplicationuser"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="QueryOauthapplicationuserSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="modelQuery"></property>
+  <property name="optionalParams" value="start,pageSize,idOrder"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Oauthapplicationuser"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="CreateOauthapplicationuserPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="CreateOauthapplicationuserHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="CreateOauthapplicationuserHandler" class="com.rapidbackend.socialutil.process.handler.db.CreateSingleDbRecordHandler"><!-- create one Oauthapplicationuser in database-->
+    <property name="dao" ref="OauthapplicationuserDao"></property>
+    <property name="interceptors">
+        <list>        </list>
+    </property>
+</bean>
+
+<bean id="ReadOauthapplicationuserPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="ReadOauthapplicationuserHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="ReadOauthapplicationuserHandler" class="com.rapidbackend.socialutil.process.handler.db.SelectSingleDbRecordHandler"><!-- read one Oauthapplicationuser in database-->
+    <property name="dao" ref="OauthapplicationuserDao"></property>
+</bean>
+
+<bean id="UpdateOauthapplicationuserPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="UpdateOauthapplicationuserHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="UpdateOauthapplicationuserHandler" class="com.rapidbackend.socialutil.process.handler.db.UpdateSingleDbRecordHandler"><!-- update one Oauthapplicationuser in database-->
+    <property name="dao" ref="OauthapplicationuserDao"></property>
+</bean>
+
+<bean id="DeleteOauthapplicationuserPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="DeleteOauthapplicationuserHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="DeleteOauthapplicationuserHandler" class="com.rapidbackend.socialutil.process.handler.db.DeleteSingleDbRecordHandler"><!-- delete one Oauthapplicationuser in database-->
+    <property name="dao" ref="OauthapplicationuserDao"></property>
+</bean>
+
+<bean id="QueryOauthapplicationuserPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="QueryOauthapplicationuserHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="QueryOauthapplicationuserHandler" class="com.rapidbackend.socialutil.process.handler.db.QueryDbRecordHandler"><!-- read one Oauthapplicationuser in database-->
+    <property name="dao" ref="OauthapplicationuserDao"></property>
+</bean>
+<!--END  create commands for model Oauthapplicationuser  -->
+<!--START  create commands for model Oauthtokenassociation  -->
+<bean id="CreateOauthtokenassociationSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="applicationId,token,userId"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Oauthtokenassociation"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="UpdateOauthtokenassociationSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="id"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Oauthtokenassociation"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="ReadOauthtokenassociationSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="id"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Oauthtokenassociation"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="DeleteOauthtokenassociationSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="id"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Oauthtokenassociation"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="QueryOauthtokenassociationSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="modelQuery"></property>
+  <property name="optionalParams" value="start,pageSize,idOrder"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Oauthtokenassociation"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="CreateOauthtokenassociationPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="CreateOauthtokenassociationHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="CreateOauthtokenassociationHandler" class="com.rapidbackend.socialutil.process.handler.db.CreateSingleDbRecordHandler"><!-- create one Oauthtokenassociation in database-->
+    <property name="dao" ref="OauthtokenassociationDao"></property>
+    <property name="interceptors">
+        <list>        </list>
+    </property>
+</bean>
+
+<bean id="ReadOauthtokenassociationPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="ReadOauthtokenassociationHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="ReadOauthtokenassociationHandler" class="com.rapidbackend.socialutil.process.handler.db.SelectSingleDbRecordHandler"><!-- read one Oauthtokenassociation in database-->
+    <property name="dao" ref="OauthtokenassociationDao"></property>
+</bean>
+
+<bean id="UpdateOauthtokenassociationPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="UpdateOauthtokenassociationHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="UpdateOauthtokenassociationHandler" class="com.rapidbackend.socialutil.process.handler.db.UpdateSingleDbRecordHandler"><!-- update one Oauthtokenassociation in database-->
+    <property name="dao" ref="OauthtokenassociationDao"></property>
+</bean>
+
+<bean id="DeleteOauthtokenassociationPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="DeleteOauthtokenassociationHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="DeleteOauthtokenassociationHandler" class="com.rapidbackend.socialutil.process.handler.db.DeleteSingleDbRecordHandler"><!-- delete one Oauthtokenassociation in database-->
+    <property name="dao" ref="OauthtokenassociationDao"></property>
+</bean>
+
+<bean id="QueryOauthtokenassociationPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="QueryOauthtokenassociationHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="QueryOauthtokenassociationHandler" class="com.rapidbackend.socialutil.process.handler.db.QueryDbRecordHandler"><!-- read one Oauthtokenassociation in database-->
+    <property name="dao" ref="OauthtokenassociationDao"></property>
+</bean>
+<!--END  create commands for model Oauthtokenassociation  -->
+<!--START  create commands for model Fileuploaded  -->
+<bean id="CreateFileuploadedSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="fileLocation,userid"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Fileuploaded"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="UpdateFileuploadedSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="id"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Fileuploaded"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="ReadFileuploadedSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="id"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Fileuploaded"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="DeleteFileuploadedSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="id"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Fileuploaded"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="QueryFileuploadedSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="modelQuery"></property>
+  <property name="optionalParams" value="start,pageSize,idOrder"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Fileuploaded"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="CreateFileuploadedPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="CreateFileuploadedHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="CreateFileuploadedHandler" class="com.rapidbackend.socialutil.process.handler.db.CreateSingleDbRecordHandler"><!-- create one Fileuploaded in database-->
+    <property name="dao" ref="FileuploadedDao"></property>
+    <property name="interceptors">
+        <list>        </list>
+    </property>
+</bean>
+
+<bean id="ReadFileuploadedPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="ReadFileuploadedHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="ReadFileuploadedHandler" class="com.rapidbackend.socialutil.process.handler.db.SelectSingleDbRecordHandler"><!-- read one Fileuploaded in database-->
+    <property name="dao" ref="FileuploadedDao"></property>
+</bean>
+
+<bean id="UpdateFileuploadedPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="UpdateFileuploadedHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="UpdateFileuploadedHandler" class="com.rapidbackend.socialutil.process.handler.db.UpdateSingleDbRecordHandler"><!-- update one Fileuploaded in database-->
+    <property name="dao" ref="FileuploadedDao"></property>
+</bean>
+
+<bean id="DeleteFileuploadedPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="DeleteFileuploadedHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="DeleteFileuploadedHandler" class="com.rapidbackend.socialutil.process.handler.db.DeleteSingleDbRecordHandler"><!-- delete one Fileuploaded in database-->
+    <property name="dao" ref="FileuploadedDao"></property>
+</bean>
+
+<bean id="QueryFileuploadedPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="QueryFileuploadedHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="QueryFileuploadedHandler" class="com.rapidbackend.socialutil.process.handler.db.QueryDbRecordHandler"><!-- read one Fileuploaded in database-->
+    <property name="dao" ref="FileuploadedDao"></property>
+</bean>
+<!--END  create commands for model Fileuploaded  -->
+<!--START  create commands for model Feedsource  -->
+<bean id="CreateFeedsourceSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="content,name,url"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Feedsource"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="UpdateFeedsourceSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="id"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Feedsource"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="ReadFeedsourceSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="id"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Feedsource"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="DeleteFeedsourceSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="id"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Feedsource"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="QueryFeedsourceSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="modelQuery"></property>
+  <property name="optionalParams" value="start,pageSize,idOrder"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Feedsource"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="CreateFeedsourcePipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="CreateFeedsourceHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="CreateFeedsourceHandler" class="com.rapidbackend.socialutil.process.handler.db.CreateSingleDbRecordHandler"><!-- create one Feedsource in database-->
+    <property name="dao" ref="FeedsourceDao"></property>
+    <property name="interceptors">
+        <list>        </list>
+    </property>
+</bean>
+
+<bean id="ReadFeedsourcePipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="ReadFeedsourceHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="ReadFeedsourceHandler" class="com.rapidbackend.socialutil.process.handler.db.SelectSingleDbRecordHandler"><!-- read one Feedsource in database-->
+    <property name="dao" ref="FeedsourceDao"></property>
+</bean>
+
+<bean id="UpdateFeedsourcePipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="UpdateFeedsourceHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="UpdateFeedsourceHandler" class="com.rapidbackend.socialutil.process.handler.db.UpdateSingleDbRecordHandler"><!-- update one Feedsource in database-->
+    <property name="dao" ref="FeedsourceDao"></property>
+</bean>
+
+<bean id="DeleteFeedsourcePipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="DeleteFeedsourceHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="DeleteFeedsourceHandler" class="com.rapidbackend.socialutil.process.handler.db.DeleteSingleDbRecordHandler"><!-- delete one Feedsource in database-->
+    <property name="dao" ref="FeedsourceDao"></property>
+</bean>
+
+<bean id="QueryFeedsourcePipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="QueryFeedsourceHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="QueryFeedsourceHandler" class="com.rapidbackend.socialutil.process.handler.db.QueryDbRecordHandler"><!-- read one Feedsource in database-->
+    <property name="dao" ref="FeedsourceDao"></property>
+</bean>
+<!--END  create commands for model Feedsource  -->
+<!--START  create commands for model User  -->
+<bean id="CreateUserSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="password,screenName"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="User"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="UpdateUserSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="id"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="User"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="ReadUserSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="id"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="User"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="DeleteUserSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="id"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="User"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="QueryUserSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="modelQuery"></property>
+  <property name="optionalParams" value="start,pageSize,idOrder"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="User"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="CreateUserPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="CreateUserHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="CreateUserHandler" class="com.rapidbackend.socialutil.process.handler.db.CreateSingleDbRecordHandler"><!-- create one User in database-->
+    <property name="dao" ref="UserDao"></property>
+    <property name="interceptors">
+        <list>
+        <ref bean="PasswordEncryptor"/>
+        </list>
+    </property>
+</bean>
+
+<bean id="ReadUserPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="ReadUserHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="ReadUserHandler" class="com.rapidbackend.socialutil.process.handler.db.SelectSingleDbRecordHandler"><!-- read one User in database-->
+    <property name="dao" ref="UserDao"></property>
+</bean>
+
+<bean id="UpdateUserPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="UpdateUserHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="UpdateUserHandler" class="com.rapidbackend.socialutil.process.handler.db.UpdateSingleDbRecordHandler"><!-- update one User in database-->
+    <property name="dao" ref="UserDao"></property>
+</bean>
+
+<bean id="DeleteUserPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="DeleteUserHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="DeleteUserHandler" class="com.rapidbackend.socialutil.process.handler.db.DeleteSingleDbRecordHandler"><!-- delete one User in database-->
+    <property name="dao" ref="UserDao"></property>
+</bean>
+
+<bean id="QueryUserPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="QueryUserHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="QueryUserHandler" class="com.rapidbackend.socialutil.process.handler.db.QueryDbRecordHandler"><!-- read one User in database-->
+    <property name="dao" ref="UserDao"></property>
+</bean>
+<!--END  create commands for model User  -->
+<!--START  create commands for model Group  -->
+<bean id="CreateGroupSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="createdby,name"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Group"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="UpdateGroupSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="id"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Group"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="ReadGroupSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="id"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Group"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="DeleteGroupSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="id"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Group"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="QueryGroupSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="modelQuery"></property>
+  <property name="optionalParams" value="start,pageSize,idOrder"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="Group"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="CreateGroupPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="CreateGroupHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="CreateGroupHandler" class="com.rapidbackend.socialutil.process.handler.db.CreateSingleDbRecordHandler"><!-- create one Group in database-->
+    <property name="dao" ref="GroupDao"></property>
+    <property name="interceptors">
+        <list>        </list>
+    </property>
+</bean>
+
+<bean id="ReadGroupPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="ReadGroupHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="ReadGroupHandler" class="com.rapidbackend.socialutil.process.handler.db.SelectSingleDbRecordHandler"><!-- read one Group in database-->
+    <property name="dao" ref="GroupDao"></property>
+</bean>
+
+<bean id="UpdateGroupPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="UpdateGroupHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="UpdateGroupHandler" class="com.rapidbackend.socialutil.process.handler.db.UpdateSingleDbRecordHandler"><!-- update one Group in database-->
+    <property name="dao" ref="GroupDao"></property>
+</bean>
+
+<bean id="DeleteGroupPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="DeleteGroupHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="DeleteGroupHandler" class="com.rapidbackend.socialutil.process.handler.db.DeleteSingleDbRecordHandler"><!-- delete one Group in database-->
+    <property name="dao" ref="GroupDao"></property>
+</bean>
+
+<bean id="QueryGroupPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+             <ref bean="QueryGroupHandler"></ref>   
+        </list>
+    </property>
+</bean>
+<bean id="QueryGroupHandler" class="com.rapidbackend.socialutil.process.handler.db.QueryDbRecordHandler"><!-- read one Group in database-->
+    <property name="dao" ref="GroupDao"></property>
+</bean>
+<!--END  create commands for model Group  -->
+</beans>

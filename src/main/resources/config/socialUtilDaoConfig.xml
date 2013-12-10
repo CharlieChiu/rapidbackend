@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans 
+  xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:tx="http://www.springframework.org/schema/tx"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+<!-- use spring 2.5 to avoid rebuilding code-->
+<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+    <property name="driverClass" value="com.mysql.jdbc.Driver"/>
+    <property name="jdbcUrl" value="jdbc:mysql://127.0.0.1/goodtaste?characterEncoding=utf-8"/>
+    <property name="user" value="root"/>
+    <property name="password" value="111111"/>
+    <property name="maxIdleTime" value="28000"/>
+    <property name="maxConnectionAge" value="28000"/>
+  </bean>
+  <bean id="transactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
+    <property name="transactionManager" ref="transactionManager"/>
+  </bean>
+<!-- Transaction manager for a single JDBC DataSource -->
+  <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <property name="dataSource" ref="dataSource"/>
+  </bean>
+  
+  <!-- Activates @Transactional for DefaultImageDatabase -->
+  <tx:annotation-driven transaction-manager="transactionManager"/>
+  
+  <!-- DAO RELATED START -->
+  <bean id="defaultLobHandler" class="org.springframework.jdbc.support.lob.DefaultLobHandler" lazy-init="true"/>
+  
+  <bean id="simpleJdbcTemplate" name="simpleJdbcTemplate"
+    class="org.springframework.jdbc.core.simple.SimpleJdbcTemplate">
+    <constructor-arg ref="dataSource"></constructor-arg>
+  </bean>
+  
+  <bean id="jdbcTemplate" name="jdbcTemplate"
+    class="org.springframework.jdbc.core.JdbcTemplate">
+    <constructor-arg ref="dataSource"></constructor-arg>
+  </bean>
+  
+  <bean id="insertCity" name="insertCity"
+    class="org.springframework.jdbc.core.simple.SimpleJdbcInsert">
+    <constructor-arg ref="dataSource"></constructor-arg>
+    <property name="tableName" value="city"></property>
+    <property name="generatedKeyNames" value="id"></property>
+  </bean>
+    
+    <bean id="jdbcTemplateCity" name="jdbcTemplateCity"
+    class="org.springframework.jdbc.core.JdbcTemplate">
+    <constructor-arg ref="dataSource"></constructor-arg>
+  </bean>
+    
+  <bean id="CityDao" name="CityDao"
+    class="com.rapidbackend.socialutil.dao.mysql.gen.CityDao">
+    <property name="tableName" value="city"></property>
+    <property name="jdbcTemplate" ref="jdbcTemplateCity"></property>
+    <property name="simpleJdbcInsert" ref="insertCity"></property>
+    <property name="typeFinder" ref="SocialUtilModelTypeFinder"></property>
+  </bean>
+  <bean id="insertFeedsource" name="insertFeedsource"
+    class="org.springframework.jdbc.core.simple.SimpleJdbcInsert">
+    <constructor-arg ref="dataSource"></constructor-arg>
+    <property name="tableName" value="feedsource"></property>
+    <property name="generatedKeyNames" value="id"></property>
+  </bean>
+    
+    <bean id="jdbcTemplateFeedsource" name="jdbcTemplateFeedsource"
+    class="org.springframework.jdbc.core.JdbcTemplate">
+    <constructor-arg ref="dataSource"></constructor-arg>
+  </bean>
+    
+  <bean id="FeedsourceDao" name="FeedsourceDao"
+    class="com.rapidbackend.socialutil.dao.mysql.gen.FeedsourceDao">
+    <property name="tableName" value="feedsource"></property>
+    <property name="jdbcTemplate" ref="jdbcTemplateFeedsource"></property>
+    <property name="simpleJdbcInsert" ref="insertFeedsource"></property>
+    <property name="typeFinder" ref="SocialUtilModelTypeFinder"></property>
+  </bean>
+  <bean id="insertFileuploaded" name="insertFileuploaded"
+    class="org.springframework.jdbc.core.simple.SimpleJdbcInsert">
+    <constructor-arg ref="dataSource"></constructor-arg>
+    <property name="tableName" value="fileuploaded"></property>
+    <property name="generatedKeyNames" value="id"></property>
+  </bean>
+    
+    <bean id="jdbcTemplateFileuploaded" name="jdbcTemplateFileuploaded"
+    class="org.springframework.jdbc.core.JdbcTemplate">
+    <constructor-arg ref="dataSource"></constructor-arg>
+  </bean>
+    
+  <bean id="FileuploadedDao" name="FileuploadedDao"
+    class="com.rapidbackend.socialutil.dao.mysql.gen.FileuploadedDao">
+    <property name="tableName" value="fileuploaded"></property>
+    <property name="jdbcTemplate" ref="jdbcTemplateFileuploaded"></property>
+    <property name="simpleJdbcInsert" ref="insertFileuploaded"></property>
+    <property name="typeFinder" ref="SocialUtilModelTypeFinder"></property>
+  </bean>
+  <bean id="insertGroup" name="insertGroup"
+    class="org.springframework.jdbc.core.simple.SimpleJdbcInsert">
+    <constructor-arg ref="dataSource"></constructor-arg>
+    <property name="tableName" value="group"></property>
+    <property name="generatedKeyNames" value="id"></property>
+  </bean>
+    
+    <bean id="jdbcTemplateGroup" name="jdbcTemplateGroup"
+    class="org.springframework.jdbc.core.JdbcTemplate">
+    <constructor-arg ref="dataSource"></constructor-arg>
+  </bean>
+    
+  <bean id="GroupDao" name="GroupDao"
+    class="com.rapidbackend.socialutil.dao.mysql.gen.GroupDao">
+    <property name="tableName" value="group"></property>
+    <property name="jdbcTemplate" ref="jdbcTemplateGroup"></property>
+    <property name="simpleJdbcInsert" ref="insertGroup"></property>
+    <property name="typeFinder" ref="SocialUtilModelTypeFinder"></property>
+  </bean>
+  <bean id="insertGroupfeed" name="insertGroupfeed"
+    class="org.springframework.jdbc.core.simple.SimpleJdbcInsert">
+    <constructor-arg ref="dataSource"></constructor-arg>
+    <property name="tableName" value="groupfeed"></property>
+    <property name="generatedKeyNames" value="id"></property>
+  </bean>
+    
+    <bean id="jdbcTemplateGroupfeed" name="jdbcTemplateGroupfeed"
+    class="org.springframework.jdbc.core.JdbcTemplate">
+    <constructor-arg ref="dataSource"></constructor-arg>
+  </bean>
+    
+  <bean id="GroupfeedDao" name="GroupfeedDao"
+    class="com.rapidbackend.socialutil.dao.mysql.gen.GroupfeedDao">
+    <property name="tableName" value="groupfeed"></property>
+    <property name="jdbcTemplate" ref="jdbcTemplateGroupfeed"></property>
+    <property name="simpleJdbcInsert" ref="insertGroupfeed"></property>
+    <property name="typeFinder" ref="SocialUtilModelTypeFinder"></property>
+  </bean>
+  <bean id="insertGroupfeedcomment" name="insertGroupfeedcomment"
+    class="org.springframework.jdbc.core.simple.SimpleJdbcInsert">
+    <constructor-arg ref="dataSource"></constructor-arg>
+    <property name="tableName" value="groupfeedcomment"></property>
+    <property name="generatedKeyNames" value="id"></property>
+  </bean>
+    
+    <bean id="jdbcTemplateGroupfeedcomment" name="jdbcTemplateGroupfeedcomment"
+    class="org.springframework.jdbc.core.JdbcTemplate">
+    <constructor-arg ref="dataSource"></constructor-arg>
+  </bean>
+    
+  <bean id="GroupfeedcommentDao" name="GroupfeedcommentDao"
+    class="com.rapidbackend.socialutil.dao.mysql.gen.GroupfeedcommentDao">
+    <property name="tableName" value="groupfeedcomment"></property>
+    <property name="jdbcTemplate" ref="jdbcTemplateGroupfeedcomment"></property>
+    <property name="simpleJdbcInsert" ref="insertGroupfeedcomment"></property>
+    <property name="typeFinder" ref="SocialUtilModelTypeFinder"></property>
+  </bean>
+  <bean id="insertGroupfeedcontent" name="insertGroupfeedcontent"
+    class="org.springframework.jdbc.core.simple.SimpleJdbcInsert">
+    <constructor-arg ref="dataSource"></constructor-arg>
+    <property name="tableName" value="groupfeedcontent"></property>
+    <property name="generatedKeyNames" value="id"></property>
+  </bean>
+    
+    <bean id="jdbcTemplateGroupfeedcontent" name="jdbcTemplateGroupfeedcontent"
+    class="org.springframework.jdbc.core.JdbcTemplate">
+    <constructor-arg ref="dataSource"></constructor-arg>
+  </bean>
+    
+  <bean id="GroupfeedcontentDao" name="GroupfeedcontentDao"
+    class="com.rapidbackend.socialutil.dao.mysql.gen.GroupfeedcontentDao">
+    <property name="tableName" value="groupfeedcontent"></property>
+    <property name="jdbcTemplate" ref="jdbcTemplateGroupfeedcontent"></property>
+    <property name="simpleJdbcInsert" ref="insertGroupfeedcontent"></property>
+    <property name="typeFinder" ref="SocialUtilModelTypeFinder"></property>
+  </bean>
+  <bean id="insertGroupsubscription" name="insertGroupsubscription"
+    class="org.springframework.jdbc.core.simple.SimpleJdbcInsert">
+    <constructor-arg ref="dataSource"></constructor-arg>
+    <property name="tableName" value="groupsubscription"></property>
+    <property name="generatedKeyNames" value="id"></property>
+  </bean>
+    
+    <bean id="jdbcTemplateGroupsubscription" name="jdbcTemplateGroupsubscription"
+    class="org.springframework.jdbc.core.JdbcTemplate">
+    <constructor-arg ref="dataSource"></constructor-arg>
+  </bean>
+    
+  <bean id="GroupsubscriptionDao" name="GroupsubscriptionDao"
+    class="com.rapidbackend.socialutil.dao.mysql.gen.GroupsubscriptionDao">
+    <property name="tableName" value="groupsubscription"></property>
+    <property name="jdbcTemplate" ref="jdbcTemplateGroupsubscription"></property>
+    <property name="simpleJdbcInsert" ref="insertGroupsubscription"></property>
+    <property name="typeFinder" ref="SocialUtilModelTypeFinder"></property>
+  </bean>
+  <bean id="insertOauthapplication" name="insertOauthapplication"
+    class="org.springframework.jdbc.core.simple.SimpleJdbcInsert">
+    <constructor-arg ref="dataSource"></constructor-arg>
+    <property name="tableName" value="oauthapplication"></property>
+    <property name="generatedKeyNames" value="id"></property>
+  </bean>
+    
+    <bean id="jdbcTemplateOauthapplication" name="jdbcTemplateOauthapplication"
+    class="org.springframework.jdbc.core.JdbcTemplate">
+    <constructor-arg ref="dataSource"></constructor-arg>
+  </bean>
+    
+  <bean id="OauthapplicationDao" name="OauthapplicationDao"
+    class="com.rapidbackend.socialutil.dao.mysql.gen.OauthapplicationDao">
+    <property name="tableName" value="oauthapplication"></property>
+    <property name="jdbcTemplate" ref="jdbcTemplateOauthapplication"></property>
+    <property name="simpleJdbcInsert" ref="insertOauthapplication"></property>
+    <property name="typeFinder" ref="SocialUtilModelTypeFinder"></property>
+  </bean>
+  <bean id="insertOauthapplicationuser" name="insertOauthapplicationuser"
+    class="org.springframework.jdbc.core.simple.SimpleJdbcInsert">
+    <constructor-arg ref="dataSource"></constructor-arg>
+    <property name="tableName" value="oauthapplicationuser"></property>
+    <property name="generatedKeyNames" value="id"></property>
+  </bean>
+    
+    <bean id="jdbcTemplateOauthapplicationuser" name="jdbcTemplateOauthapplicationuser"
+    class="org.springframework.jdbc.core.JdbcTemplate">
+    <constructor-arg ref="dataSource"></constructor-arg>
+  </bean>
+    
+  <bean id="OauthapplicationuserDao" name="OauthapplicationuserDao"
+    class="com.rapidbackend.socialutil.dao.mysql.gen.OauthapplicationuserDao">
+    <property name="tableName" value="oauthapplicationuser"></property>
+    <property name="jdbcTemplate" ref="jdbcTemplateOauthapplicationuser"></property>
+    <property name="simpleJdbcInsert" ref="insertOauthapplicationuser"></property>
+    <property name="typeFinder" ref="SocialUtilModelTypeFinder"></property>
+  </bean>
+  <bean id="insertOauthtokenassociation" name="insertOauthtokenassociation"
+    class="org.springframework.jdbc.core.simple.SimpleJdbcInsert">
+    <constructor-arg ref="dataSource"></constructor-arg>
+    <property name="tableName" value="oauthtokenassociation"></property>
+    <property name="generatedKeyNames" value="id"></property>
+  </bean>
+    
+    <bean id="jdbcTemplateOauthtokenassociation" name="jdbcTemplateOauthtokenassociation"
+    class="org.springframework.jdbc.core.JdbcTemplate">
+    <constructor-arg ref="dataSource"></constructor-arg>
+  </bean>
+    
+  <bean id="OauthtokenassociationDao" name="OauthtokenassociationDao"
+    class="com.rapidbackend.socialutil.dao.mysql.gen.OauthtokenassociationDao">
+    <property name="tableName" value="oauthtokenassociation"></property>
+    <property name="jdbcTemplate" ref="jdbcTemplateOauthtokenassociation"></property>
+    <property name="simpleJdbcInsert" ref="insertOauthtokenassociation"></property>
+    <property name="typeFinder" ref="SocialUtilModelTypeFinder"></property>
+  </bean>
+  <bean id="insertProfiles" name="insertProfiles"
+    class="org.springframework.jdbc.core.simple.SimpleJdbcInsert">
+    <constructor-arg ref="dataSource"></constructor-arg>
+    <property name="tableName" value="profiles"></property>
+    <property name="generatedKeyNames" value="id"></property>
+  </bean>
+    
+    <bean id="jdbcTemplateProfiles" name="jdbcTemplateProfiles"
+    class="org.springframework.jdbc.core.JdbcTemplate">
+    <constructor-arg ref="dataSource"></constructor-arg>
+  </bean>
+    
+  <bean id="ProfilesDao" name="ProfilesDao"
+    class="com.rapidbackend.socialutil.dao.mysql.gen.ProfilesDao">
+    <property name="tableName" value="profiles"></property>
+    <property name="jdbcTemplate" ref="jdbcTemplateProfiles"></property>
+    <property name="simpleJdbcInsert" ref="insertProfiles"></property>
+    <property name="typeFinder" ref="SocialUtilModelTypeFinder"></property>
+  </bean>
+  <bean id="insertUser" name="insertUser"
+    class="org.springframework.jdbc.core.simple.SimpleJdbcInsert">
+    <constructor-arg ref="dataSource"></constructor-arg>
+    <property name="tableName" value="user"></property>
+    <property name="generatedKeyNames" value="id"></property>
+  </bean>
+    
+    <bean id="jdbcTemplateUser" name="jdbcTemplateUser"
+    class="org.springframework.jdbc.core.JdbcTemplate">
+    <constructor-arg ref="dataSource"></constructor-arg>
+  </bean>
+    
+  <bean id="UserDao" name="UserDao"
+    class="com.rapidbackend.socialutil.dao.mysql.gen.UserDao">
+    <property name="tableName" value="user"></property>
+    <property name="jdbcTemplate" ref="jdbcTemplateUser"></property>
+    <property name="simpleJdbcInsert" ref="insertUser"></property>
+    <property name="typeFinder" ref="SocialUtilModelTypeFinder"></property>
+  </bean>
+  <bean id="insertUserfeed" name="insertUserfeed"
+    class="org.springframework.jdbc.core.simple.SimpleJdbcInsert">
+    <constructor-arg ref="dataSource"></constructor-arg>
+    <property name="tableName" value="userfeed"></property>
+    <property name="generatedKeyNames" value="id"></property>
+  </bean>
+    
+    <bean id="jdbcTemplateUserfeed" name="jdbcTemplateUserfeed"
+    class="org.springframework.jdbc.core.JdbcTemplate">
+    <constructor-arg ref="dataSource"></constructor-arg>
+  </bean>
+    
+  <bean id="UserfeedDao" name="UserfeedDao"
+    class="com.rapidbackend.socialutil.dao.mysql.gen.UserfeedDao">
+    <property name="tableName" value="userfeed"></property>
+    <property name="jdbcTemplate" ref="jdbcTemplateUserfeed"></property>
+    <property name="simpleJdbcInsert" ref="insertUserfeed"></property>
+    <property name="typeFinder" ref="SocialUtilModelTypeFinder"></property>
+  </bean>
+  <bean id="insertUserfeedcomment" name="insertUserfeedcomment"
+    class="org.springframework.jdbc.core.simple.SimpleJdbcInsert">
+    <constructor-arg ref="dataSource"></constructor-arg>
+    <property name="tableName" value="userfeedcomment"></property>
+    <property name="generatedKeyNames" value="id"></property>
+  </bean>
+    
+    <bean id="jdbcTemplateUserfeedcomment" name="jdbcTemplateUserfeedcomment"
+    class="org.springframework.jdbc.core.JdbcTemplate">
+    <constructor-arg ref="dataSource"></constructor-arg>
+  </bean>
+    
+  <bean id="UserfeedcommentDao" name="UserfeedcommentDao"
+    class="com.rapidbackend.socialutil.dao.mysql.gen.UserfeedcommentDao">
+    <property name="tableName" value="userfeedcomment"></property>
+    <property name="jdbcTemplate" ref="jdbcTemplateUserfeedcomment"></property>
+    <property name="simpleJdbcInsert" ref="insertUserfeedcomment"></property>
+    <property name="typeFinder" ref="SocialUtilModelTypeFinder"></property>
+  </bean>
+  <bean id="insertUserfeedcontent" name="insertUserfeedcontent"
+    class="org.springframework.jdbc.core.simple.SimpleJdbcInsert">
+    <constructor-arg ref="dataSource"></constructor-arg>
+    <property name="tableName" value="userfeedcontent"></property>
+    <property name="generatedKeyNames" value="id"></property>
+  </bean>
+    
+    <bean id="jdbcTemplateUserfeedcontent" name="jdbcTemplateUserfeedcontent"
+    class="org.springframework.jdbc.core.JdbcTemplate">
+    <constructor-arg ref="dataSource"></constructor-arg>
+  </bean>
+    
+  <bean id="UserfeedcontentDao" name="UserfeedcontentDao"
+    class="com.rapidbackend.socialutil.dao.mysql.gen.UserfeedcontentDao">
+    <property name="tableName" value="userfeedcontent"></property>
+    <property name="jdbcTemplate" ref="jdbcTemplateUserfeedcontent"></property>
+    <property name="simpleJdbcInsert" ref="insertUserfeedcontent"></property>
+    <property name="typeFinder" ref="SocialUtilModelTypeFinder"></property>
+  </bean>
+  <bean id="insertUsersubscription" name="insertUsersubscription"
+    class="org.springframework.jdbc.core.simple.SimpleJdbcInsert">
+    <constructor-arg ref="dataSource"></constructor-arg>
+    <property name="tableName" value="usersubscription"></property>
+    <property name="generatedKeyNames" value="id"></property>
+  </bean>
+    
+    <bean id="jdbcTemplateUsersubscription" name="jdbcTemplateUsersubscription"
+    class="org.springframework.jdbc.core.JdbcTemplate">
+    <constructor-arg ref="dataSource"></constructor-arg>
+  </bean>
+    
+  <bean id="UsersubscriptionDao" name="UsersubscriptionDao"
+    class="com.rapidbackend.socialutil.dao.mysql.gen.UsersubscriptionDao">
+    <property name="tableName" value="usersubscription"></property>
+    <property name="jdbcTemplate" ref="jdbcTemplateUsersubscription"></property>
+    <property name="simpleJdbcInsert" ref="insertUsersubscription"></property>
+    <property name="typeFinder" ref="SocialUtilModelTypeFinder"></property>
+  </bean>
+  
+  </beans>

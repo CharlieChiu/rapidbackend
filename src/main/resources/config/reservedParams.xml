@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 
+  xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:tx="http://www.springframework.org/schema/tx"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+<context:annotation-config />
+
+<!-- this file contains some reserved param names , those definitions might change according to API changes -->
+
+<bean id="sessionId" class="com.rapidbackend.core.request.StringParam">
+  <property name="name" value="sessionId"></property>
+</bean>
+<bean id="modelQuery" class="com.rapidbackend.core.request.StringParam">
+  <property name="name" value="modelQuery"></property>
+</bean>
+
+<bean id="queryOrder" class="com.rapidbackend.core.request.StringParam">
+  <property name="name" value="queryOrder"></property>
+</bean>
+
+<bean id="idOrder" class="com.rapidbackend.core.request.StringParam">
+  <property name="name" value="idOrder"></property>
+</bean>
+
+<bean id="start" class="com.rapidbackend.core.request.IntParam">
+  <property name="name" value="start"></property>
+</bean>
+
+<bean id="pageSize" class="com.rapidbackend.core.request.IntParam">
+  <property name="name" value="pageSize"></property>
+</bean>
+
+<bean id="repostToFeedId" class="com.rapidbackend.core.request.IntParam">
+  <property name="name" value="repostToFeedId"></property>
+</bean>
+
+<bean id="fids" class="com.rapidbackend.core.request.IntListParam">
+  <property name="name" value="fids"></property>
+</bean>
+
+
+</beans>

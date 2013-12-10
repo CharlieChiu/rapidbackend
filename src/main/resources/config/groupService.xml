@@ -1,0 +1,637 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 
+  xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:tx="http://www.springframework.org/schema/tx"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+<context:annotation-config />
+<!-- beginning of post queues -->
+
+<!-- keyword 'User+FeedPostQueue' -->
+<bean id="GroupFeedPostQueue" class="com.rapidbackend.redisqueue.RedisQueue">
+  <property name="queueMapper" ref="GroupFeedPostQueueMapper"></property>
+</bean>
+
+<bean id="GroupFeedPostQueueService" class="com.rapidbackend.redisqueue.RedisQueueService">
+  <property name="redisQueue" ref="GroupFeedPostQueue"></property>
+  <property name="queueProcessors">
+    <list>
+      <ref bean="GroupFeedPostQueueProcessor" />
+    </list>
+  </property>
+</bean>
+
+<bean id="GroupFeedPostQueueProcessor" class="com.rapidbackend.redisqueue.RedisQueueProcessor">
+  <property name="queueName" value="GroupFeedPostQueue"></property><!-- queue name in redis instance -->
+  <property name="redisConfig" ref="GroupFeedPostQueueDB"></property><!-- the redis target name which will direct all the requests to that target -->
+  <property name="queueProcessorName" value="GroupFeedPostQueueProcessor"></property>
+  <property name="handlerBeanName" value="GroupFeedPollHandler"></property>
+</bean>
+
+<bean id="GroupFeedPollHandler" class="com.rapidbackend.socialutil.feeds.FeedPollHandler">
+    <property name="subscriptionService" ref="GroupSubscriptionService"></property>
+    <property name="inboxService" ref="GroupInboxService"></property>
+</bean>
+
+<bean id="GroupFeedPostQueueMapper" class="com.rapidbackend.redisqueue.SimpleQueueMapper">
+    <property name="redisTargetName" value="GroupFeedPostQueueDB"></property>
+    <property name="queueName" value="GroupFeedPostQueue"></property>
+</bean>
+<!-- End of post queues -->
+
+
+<bean id="GroupInboxConfig" class="com.rapidbackend.socialutil.feeds.RedisInboxConfig">
+        <property name="inboxSize" value="2000"></property>
+</bean>
+
+<bean id="GroupInboxCache" class="com.rapidbackend.cache.RedisCache">
+    <property name="cacheMapper" ref="GroupInboxMapper"></property>
+</bean>
+
+<!-- reconfig this bean if you want to scale redis and map different Group's inbox into different redis servers -->
+<bean id="GroupInboxMapper" class="com.rapidbackend.socialutil.sharding.defaultmappers.RedisUserInboxMapper">
+    <property name="redisTargetName" value="GroupInboxDB"></property>
+</bean>
+
+<bean id="GroupSubscriptionService" class="com.rapidbackend.socialutil.subscription.SubscriptionService">
+        <!-- <property name="subscriptionCache" ref="SubscriptionCache"/> -->
+        <property name="subscriptionDao" ref="GroupsubscriptionDao"/>
+        <property name="feedService" ref="GroupFeedService"></property>
+        <property name="inboxService" ref="GroupInboxService"></property>
+        <property name="typeFinder" ref="SocialUtilModelTypeFinder"></property>
+</bean>
+
+<bean id="GroupInboxService" class="com.rapidbackend.socialutil.feeds.InboxService">
+        <property name="feedDao" ref="GroupfeedDao"/>
+        <property name="inboxConfig" ref="GroupInboxConfig"></property>
+        <property name="inboxCache" ref="GroupInboxCache"></property>
+        <property name="subscriptionService" ref="GroupSubscriptionService"/>
+        <property name="userStatusService" ref="UserStatusService"></property>
+        <property name="redisPoolConfigs">
+            <list>
+                <ref bean="GroupInboxDB"/>
+            </list>
+        </property>
+</bean>
+<!-- CommentGroupFeed begins -->
+<bean id="CommentGroupFeedSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="userId,sessionId,feedId,content"></property>
+  <property name="modelName" value="Groupfeedcomment"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="CommentGroupFeedPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    
+    <property name="insertedPipeline" ref="VerifyAuthorSessionPipeline"></property>
+    <property name="handlers">
+        <list>
+             <ref bean="CommentGroupFeedHandler"></ref>
+        </list>
+    </property>
+    <property name="appendedPipeline" ref="IncreaseGroupFeedCommentCountPipeline"></property>
+</bean>
+
+<bean id="CommentGroupFeedHandler" class="com.rapidbackend.socialutil.process.handler.feeds.CommentFollowableFeedHandler">
+    <property name="commentDao" ref="GroupfeedcommentDao"></property>
+</bean>
+<!-- CommentGroupFeed ENDs -->
+<!-- ReadGroupFeedComment begins -->
+<bean id="ReadGroupFeedCommentSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="feedId"></property>
+  <property name="optionalParams" value="start,pageSize"></property>
+</bean>
+
+<bean id="ReadGroupFeedCommentPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    
+    <property name="handlers">
+        <list>
+             <ref bean="ReadGroupFeedCommentHandler"></ref>
+        </list>
+    </property>
+</bean>
+<bean id="ReadGroupFeedCommentHandler" class="com.rapidbackend.socialutil.process.handler.feeds.ReadFeedCommentHandler">
+    <property name="commentDao" ref="GroupfeedcommentDao"></property>
+</bean>
+<!-- ReadGroupFeedComment ENDS -->
+
+
+<!-- PostGroupFeed begins -->
+<bean id="PostGroupFeedSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="userId,followableId,sessionId"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelName" value="GroupfeedContent"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="PostGroupFeedPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    
+    <property name="insertedPipeline" ref="VerifyAuthorSessionPipeline"></property>
+    <property name="handlers">
+        <list>
+             <ref bean="PostGroupFeedHandler"></ref>
+        </list>
+    </property>
+</bean>
+
+<bean id="PostGroupFeedHandler" class="com.rapidbackend.socialutil.process.handler.feeds.PostFollowableFeedHandler">
+    <property name="feedService" ref="GroupFeedService"></property>
+</bean>
+<!-- PostGroupFeed ENDs -->
+
+<!-- RepostGroupFeed begins -->
+<bean id="RepostGroupFeedSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="userId,followableId,sessionId,repostToFeedId"></property>
+  <property name="optionalParams" value="content"></property>
+  <property name="modelName" value="GroupfeedContent"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="RepostGroupFeedPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    
+    <property name="insertedPipeline" ref="VerifyAuthorSessionPipeline"></property>
+    <property name="handlers">
+        <list>
+             <ref bean="RepostGroupFeedHandler"></ref>
+        </list>
+    </property>
+    <property name="appendedPipeline" ref="IncreaseGroupFeedRepostCountPipeline"></property>
+</bean>
+
+<bean id="RepostGroupFeedHandler" class="com.rapidbackend.socialutil.process.handler.feeds.RepostFollowableFeedHandler">
+    <property name="feedService" ref="GroupFeedService"></property>
+</bean>
+<!-- RepostGroupFeed ENDs -->
+<!-- ReadGroupFeedReposts begins -->
+<bean id="ReadGroupFeedRepostsSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="repostToFeedId"></property>
+  <property name="optionalParams" value="start,pageSize"></property>
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="ReadGroupFeedRepostsPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    
+    <property name="handlers">
+        <list>
+             <ref bean="GetGroupFeedRepostIdHandler"></ref>
+        </list>
+    </property>
+    <property name="appendedPipeline" ref="GetGroupFeedsPipeline"></property>
+</bean>
+
+<bean id="GetGroupFeedRepostIdHandler" class="com.rapidbackend.socialutil.process.handler.feeds.GetRepostIdHandler">
+    <property name="feedDao" ref="GroupfeedDao"></property>
+    <property name="yield" value="fids"></property>
+</bean>
+<!-- ReadGroupFeedReposts ENDs -->
+
+<!-- increase repost count pipeline BEGINs -->
+<bean id="IncreaseGroupFeedRepostCountPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    
+    <property name="handlers">
+        <list>
+             <ref bean="IncreaseGroupFeedRepostCountHandler"></ref>
+        </list>
+    </property>
+</bean>
+
+<bean id="IncreaseGroupFeedRepostCountHandler" class="com.rapidbackend.core.process.handler.counter.IncreaseCounterHandler">
+    <property name="counterConfig" ref="GroupFeedRepostCounterConf"></property>
+</bean>
+<!-- increase repost count pipeline ENDS -->
+
+<!-- increase reply count pipeline BEGINs -->
+<bean id="IncreaseGroupFeedCommentCountPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    
+    <property name="handlers">
+        <list>
+             <ref bean="IncreaseGroupFeedCommentCountHandler"></ref>
+        </list>
+    </property>
+</bean>
+
+<bean id="IncreaseGroupFeedCommentCountHandler" class="com.rapidbackend.core.process.handler.counter.IncreaseCounterHandler">
+    <property name="counterConfig" ref="GroupFeedCommentCounterConf"></property>
+    <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property>
+</bean>
+<!-- increase reply count pipeline ENDS -->
+
+<bean id="GroupFeedService" class="com.rapidbackend.socialutil.feeds.DefaultFeedService">
+    <property name="userDao" ref="UserDao"></property>
+    <property name="feedDao" ref="GroupfeedDao"></property>
+    <property name="postFeedQueueService" ref="GroupFeedPostQueueService"></property>
+    <property name="feedContentDao" ref="GroupfeedcontentDao"></property>
+    <property name="followableDomain" value="Group"></property>
+</bean>
+
+
+<!-- SubscribeGroup begin -->
+<bean id="SubscribeGroupSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="followable,follower,sessionId"></property>
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="SubscribeGroupPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    
+    <property name="insertedPipeline" ref="VerifyFollowerSessionPipeline"></property><!-- we should insert a session verification pipeline for all commands which requires a session -->
+    <property name="handlers">
+        <list>
+             <ref bean="AddGroupFollowerHandler"></ref>
+        </list>
+    </property>
+</bean>
+<bean id="AddGroupFollowerHandler" class="com.rapidbackend.socialutil.process.handler.subscription.AddFollowerHandler">
+    <property name="subscriptionClassName" value="Groupsubscription"></property>
+    <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property>
+    <property name="subscriptionService" ref="GroupSubscriptionService"></property>
+</bean>
+<!-- 
+<bean id="SubscribeUserHandler" class="com.rapidbackend.socialutil.process.handler.subscription.SubscriptionHandler">
+    <property name="dao" ref="UsersubscriptionDao"></property>
+    <property name="subscriptionService" ref="UserSubscriptionService"></property>
+</bean>
+ -->
+ 
+ <!-- subscribeUser end -->
+ 
+ 
+ <!-- UnsubscribeUser begin -->
+<bean id="UnsubscribeGroupSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="followable,follower,sessionId"></property>
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="UnsubscribeGroupPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    
+    <property name="insertedPipeline" ref="VerifyFollowerSessionPipeline"></property><!-- we should insert a session verification pipeline for all commands which requires a session -->
+    <property name="handlers">
+        <list>
+             <ref bean="UnsubscribeGroupHandler"></ref>
+        </list>
+    </property>
+</bean>
+
+<bean id="UnsubscribeGroupHandler" class="com.rapidbackend.socialutil.process.handler.subscription.UnsubscribeHandler">
+    <property name="subscriptionClassName" value="Groupsubscription"></property>
+    <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property>
+    <property name="subscriptionService" ref="GroupSubscriptionService"></property>
+    <property name="followableDao" ref="GroupDao"></property>
+</bean> 
+ <!-- UnsubscribeGroup end -->
+
+
+<!-- DeleteGroupFeed Pipeline -->
+<bean id="DeleteGroupFeedSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="id,sessionId,followableId"></property>
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="DeleteGroupFeedPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    
+    <property name="insertedPipeline" ref="VerifyAuthorSessionPipeline"></property>
+    <property name="handlers">
+        <list>
+             <ref bean="DeleteGroupFeedHandler" />   
+             <ref bean="DeleteCachedGroupFeedHandler"/>
+        </list>
+    </property>
+</bean>
+
+<bean id="DeleteGroupFeedHandler" class="com.rapidbackend.socialutil.process.handler.feeds.DeleteFeedHandler"><!-- delete one Groupfeed in database-->
+    <property name="feedService" ref="GroupFeedService"></property>
+    <property name="interceptors">
+        <list>
+            <ref bean="VerifyGroupFeedAuthorInterceptor"/>
+        </list>
+    </property>
+    <property name="dBQueryIdListName" value="feedIdsInDbQuery"></property>
+    <property name="yield" value="feeds"></property>
+</bean>
+<bean id="DeleteCachedGroupFeedHandler" class="com.rapidbackend.core.process.handler.cache.UpdateCacheHandler">
+    <property name="redisCache" ref="FeedCache"></property>
+    <property name="dBQueryIdListName" value="feedIdsInDbQuery"></property>
+    <property name="grab" value="feeds"></property>
+    <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property>
+    <property name="modelClassName" value="Groupfeedcontent"></property>
+</bean>
+<bean id="VerifyGroupFeedAuthorInterceptor" class="com.rapidbackend.socialutil.process.interceptor.VerifyAuthorInterceptor">
+    <property name="modelDao" ref="GroupfeedcontentDao"></property>
+</bean>
+<!-- DeleteGroupFeed Pipeline End-->
+
+<!-- UpdateGroupFeed Pipeline BEGIN-->
+<bean id="UpdateGroupFeedSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="id,sessionId"></property>
+  <property name="modelName" value="GroupFeedContent"></property>
+  <property name="autowireModelPropertyAsParam" value="true"></property>
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="UpdateGroupFeedPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    
+    <property name="insertedPipeline" ref="VerifyAuthorSessionPipeline"></property>
+    <property name="handlers">
+        <list>
+             <ref bean="UpdateGroupFeedHandler" />   
+             <ref bean="UpdateCachedGroupFeedHandler"/>
+        </list>
+    </property>
+</bean>
+<bean id="UpdateGroupFeedHandler" class="com.rapidbackend.socialutil.process.handler.feeds.UpdateFeedHandler"><!-- update one Groupfeed in database-->
+    <property name="feedService" ref="GroupFeedService"></property>
+    <property name="interceptors">
+        <list>
+            <ref bean="VerifyGroupFeedAuthorInterceptor"/>
+        </list>
+    </property>
+    <property name="dBQueryIdListName" value="feedIdsInDbQuery"></property>
+    <property name="yield" value="feeds"></property>
+</bean>
+<bean id="UpdateCachedGroupFeedHandler" class="com.rapidbackend.core.process.handler.cache.UpdateCacheHandler">
+    <property name="redisCache" ref="FeedCache"></property>
+    <property name="dBQueryIdListName" value="feedIdsInDbQuery"></property>
+    <property name="grab" value="feeds"></property>
+    <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property>
+    <property name="modelClassName" value="Groupfeedcontent"></property>
+</bean>
+<!-- UpdateGroupFeed ENDS -->
+
+<!-- decrease repost count pipeline BEGINs -->
+<bean id="DecreaseGroupFeedRepostCountPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    
+    <property name="handlers">
+        <list>
+             <ref bean="DecreaseGroupFeedRepostCountHandler"></ref>
+        </list>
+    </property>
+</bean>
+
+<bean id="DecreaseGroupFeedRepostCountHandler" class="com.rapidbackend.core.process.handler.counter.DecreaseCounterHandler">
+    <property name="counterConfig" ref="GroupFeedRepostCounterConf"></property>
+    <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property>
+</bean>
+<!-- decrease repost count pipeline ENDS -->
+
+<!-- ReadGroupFeedMetadataPipeline BEGINs -->
+<bean id="ReadGroupFeedMetadataSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="fids"></property>
+</bean>
+<bean id="ReadGroupFeedMetadataPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    
+    <property name="handlers">
+        <list>
+             <ref bean="ReadGroupFeedRepostCounterHandler"></ref>
+        </list>
+    </property>
+</bean>
+
+<bean  id="ReadGroupFeedRepostCounterHandler" class="com.rapidbackend.core.process.handler.counter.ReadFeedMetadataHandler">
+    <property name="counterConfig" ref="GroupFeedRepostCounterConf"></property>
+</bean>
+<!-- ReadGroupFeedMetadataPipeline ENDS -->
+
+<!-- ReadFeedByGroup Pipeline -->
+<bean id="ReadFeedByGroupSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="id"></property>
+  <property name="optionalParams" value="start,pageSize"></property>
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="ReadFeedByGroupPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    
+    <property name="handlers">
+        <list>
+             <ref bean="GetFeedIdByGroupHandler"></ref>   
+        </list>
+    </property>
+    <property name="appendedPipeline" ref="GetGroupFeedsPipeline"></property>
+</bean>
+<bean id="GetFeedIdByGroupHandler" class="com.rapidbackend.socialutil.process.handler.feeds.GetFeedIdByFollowableHandler">
+    <property name="yield" value="fids"></property>
+    <property name="feedDao" ref="GroupfeedDao"></property>
+</bean>
+<!-- ReadFeedByGroup Pipeline End-->
+
+
+<!-- ReadGroupFeed Pipeline -->
+<bean id="ReadGroupFeedSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="fids"></property>
+  <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property><!-- this property must be set if autowireModelPropertyAsParam's been set to true -->
+</bean>
+
+<bean id="ReadGroupFeedPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    
+    <property name="handlers">
+        <list>
+             <ref bean="GetGroupfeedIdHandler"></ref>   
+        </list>
+    </property>
+    <property name="appendedPipeline" ref="GetGroupFeedsPipeline"></property>
+</bean>
+<bean id="GetGroupfeedIdHandler" class="com.rapidbackend.socialutil.process.handler.feeds.GetFeedIdHandler">
+    <property name="yield" value="fids"></property>
+</bean>
+<!-- ReadGroupFeed Pipeline End-->
+
+<!-- GetFollower start-->
+<bean id="GetGroupFollowerSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="followable"></property>
+  <property name="optionalParams" value="start,pageSize"></property>
+</bean>
+
+<bean id="GetGroupFollowerPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    
+    <property name="handlers">
+        <list>
+             <ref bean="GetGroupFollowerHandler"></ref>
+        </list>
+    </property>
+</bean>
+
+<bean id="GetGroupFollowerHandler" class="com.rapidbackend.socialutil.process.handler.subscription.GetFollowerListHandler">
+    <property name="subscriptionClassName" value="Groupsubscription"></property>
+    <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property>
+    <property name="subscriptionService" ref="GroupSubscriptionService"></property>
+    <property name="userDao" ref="UserDao"></property>
+</bean>
+<!-- GetFollower end -->
+
+<!-- GroupFeedTimeline -->
+<bean id="GroupFeedTimelineSchema" class="com.rapidbackend.core.request.RequestSchema">
+  <property name="requiredParams" value="userId"></property>
+  <property name="optionalParams" value="start,pageSize"></property>
+</bean>
+<bean id="GroupFeedTimelinePipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="timeout" value="1200000"></property>
+    <property name="handlers">
+        <list>
+            <ref bean="GetGroupInboxFeedIdListHandler"></ref>
+        </list>
+    </property>
+    <property name="appendedPipeline" ref="GetGroupFeedsPipeline"></property>
+</bean>
+
+<bean  id="GetGroupInboxFeedIdListHandler" class="com.rapidbackend.socialutil.process.handler.inbox.GetInboxFeedIdListHandler">
+    <property name="inboxService" ref="GroupInboxService"></property>
+    <property name="yield" value="fids"></property>
+</bean>
+<!-- GroupFeedTimeline end -->
+
+
+<!-- GetFeeds BEGIN -->
+<bean id="GetGroupFeedsPipeline" class="com.rapidbackend.core.process.StandardPipeline">
+    <property name="handlers">
+        <list>
+            <ref bean="ReadGroupFeedCacheHandler"></ref>
+            <ref bean="LockGroupFeedCacheHandler"></ref>
+            <ref bean="SelectGroupFeedFromDbHandler"></ref>
+            <ref bean="UpdateGroupFeedCacheHandler"/>
+            <ref bean="UnLockGroupFeedCacheHandler"></ref>
+            
+            <ref bean="GetAllSeedGroupFeedIdHandler"></ref>
+            <ref bean="ReadSeedGroupFeedCacheHandler"></ref>
+            <ref bean="LockSeedGroupFeedCacheHandler"></ref>
+            <ref bean="SelectSeedGroupFeedFromDbHandler"></ref>
+            <ref bean="UpdateSeedGroupFeedCacheHandler"/>
+            <ref bean="UnLockSeedGroupFeedCacheHandler"></ref>
+            
+            <ref bean="GetAllFeedUserIdHandler"></ref>
+            <ref bean="ReadUserCacheHandler"></ref>
+            <ref bean="LockUserCacheHandler"></ref>
+            <ref bean="SelectUserFromDbHandler"></ref>
+            <ref bean="UpdateUserCacheHandler"/>
+            <ref bean="UnLockUserCacheHandler"></ref>
+                        
+            <ref bean="MergeGroupFeedResultHandler"/>
+            
+        </list>
+    </property>
+</bean>
+<!-- handlers begin -->
+<bean  id="ReadGroupFeedCacheHandler" class="com.rapidbackend.core.process.handler.cache.ReadCacheHandler">
+    <property name="redisCache" ref="FeedCache"></property>
+    <property name="idListParamName" value="fids"></property>
+    <property name="dBQueryIdListName" value="feedIdsInDbQuery"></property>
+    <property name="yield" value="feeds"></property>
+    <property name="modelClassName" value="Groupfeedcontent"></property>
+    <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property>
+</bean>
+<bean  id="LockGroupFeedCacheHandler" class="com.rapidbackend.core.process.handler.cache.LockCacheHandler">
+    <property name="redisCache" ref="FeedCache"></property>
+    <property name="lockIdListName" value="feedIdsInDbQuery"></property>
+    <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property>
+</bean>
+<bean  id="SelectGroupFeedFromDbHandler" class="com.rapidbackend.socialutil.process.handler.db.SelectMultipleDbRecordsHandler">
+    <property name="dao" ref="GroupfeedcontentDao"></property>
+    <property name="dBQueryIdListName" value="feedIdsInDbQuery"></property>
+    <property name="yield" value="feeds"></property>
+    <property name="grab" value="feeds"></property>
+</bean>
+<bean  id="UpdateGroupFeedCacheHandler" class="com.rapidbackend.core.process.handler.cache.UpdateCacheHandler">
+    <property name="redisCache" ref="FeedCache"></property>
+    <property name="dBQueryIdListName" value="feedIdsInDbQuery"></property>
+    <property name="grab" value="feeds"></property>
+    <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property>
+    <property name="modelClassName" value="Groupfeedcontent"></property>
+</bean>
+<bean  id="UnLockGroupFeedCacheHandler" class="com.rapidbackend.core.process.handler.cache.UnlockCacheHandler">
+    <property name="redisCache" ref="FeedCache"></property>
+    <property name="unlockIdListName" value="feedIdsInDbQuery"></property>
+    <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property>
+</bean>
+<bean  id="GetAllSeedGroupFeedIdHandler" class="com.rapidbackend.socialutil.process.handler.merge.GetAllSeedFeedIdHandler">
+    <property name="grab" value="feeds"></property>
+    <property name="yield" value="seedFeedId"></property>
+</bean>
+<bean  id="ReadSeedGroupFeedCacheHandler" class="com.rapidbackend.core.process.handler.cache.ReadCacheHandler">
+    <property name="redisCache" ref="FeedCache"></property>
+    <property name="idListParamName" value="seedFeedId"></property>
+    <property name="dBQueryIdListName" value="seedFeedIdInDbQuery"></property>
+    <property name="yield" value="seedFeeds"></property><!-- be carefull should not overwrite 'feeds' result -->
+    <property name="modelClassName" value="Groupfeedcontent"></property>
+    <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property>
+</bean>
+<bean  id="LockSeedGroupFeedCacheHandler" class="com.rapidbackend.core.process.handler.cache.LockCacheHandler">
+    <property name="redisCache" ref="FeedCache"></property>
+    <property name="lockIdListName" value="seedFeedIdInDbQuery"></property>
+    <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property>
+</bean>
+<bean  id="SelectSeedGroupFeedFromDbHandler" class="com.rapidbackend.socialutil.process.handler.db.SelectMultipleDbRecordsHandler">
+    <property name="dao" ref="GroupfeedcontentDao"></property>
+    <property name="dBQueryIdListName" value="seedFeedIdInDbQuery"></property>
+    <property name="yield" value="seedFeeds"></property><!-- be carefull should not overwrite 'feeds' result -->
+    <property name="grab" value="feeds"></property>
+</bean>
+<bean  id="UpdateSeedGroupFeedCacheHandler" class="com.rapidbackend.core.process.handler.cache.UpdateCacheHandler">
+    <property name="redisCache" ref="FeedCache"></property>
+    <property name="dBQueryIdListName" value="seedFeedIdInDbQuery"></property>
+    <property name="grab" value="feeds"></property>
+    <property name="modelClassName" value="Groupfeedcontent"></property>
+    <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property>
+</bean>
+<bean  id="UnLockSeedGroupFeedCacheHandler" class="com.rapidbackend.core.process.handler.cache.UnlockCacheHandler">
+    <property name="redisCache" ref="FeedCache"></property>
+    <property name="unlockIdListName" value="seedFeedIdInDbQuery"></property>
+    <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property>
+</bean>
+
+<bean  id="GetAllFeedUserIdHandler" class="com.rapidbackend.socialutil.process.handler.merge.GetAllFeedUserIdHandler">
+    <property name="grab" value="feeds"></property>
+    <property name="yield" value="uids"></property>
+</bean>
+<bean  id="ReadUserCacheHandler" class="com.rapidbackend.core.process.handler.cache.ReadCacheHandler">
+    <property name="redisCache" ref="UserCache"></property>
+    <property name="idListParamName" value="uids"></property>
+    <property name="dBQueryIdListName" value="userIdsInDbQuery"></property>
+    <property name="yield" value="users"></property>
+    <property name="modelClassName" value="user"></property>
+    <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property>
+</bean>
+<bean  id="LockUserCacheHandler" class="com.rapidbackend.core.process.handler.cache.LockCacheHandler">
+    <property name="redisCache" ref="UserCache"></property>
+    <property name="lockIdListName" value="userIdsInDbQuery"></property>
+    <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property>
+</bean>
+<bean  id="SelectUserFromDbHandler" class="com.rapidbackend.socialutil.process.handler.db.SelectMultipleDbRecordsHandler">
+    <property name="dao" ref="UserDao"></property>
+    <property name="dBQueryIdListName" value="userIdsInDbQuery"></property>
+    <property name="yield" value="users"></property>
+    <property name="grab" value="users"></property>
+</bean>
+<bean  id="UpdateUserCacheHandler" class="com.rapidbackend.core.process.handler.cache.UpdateCacheHandler">
+    <property name="redisCache" ref="UserCache"></property>
+    <property name="dBQueryIdListName" value="userIdsInDbQuery"></property>
+    <property name="grab" value="users"></property>
+    <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property>
+    <property name="modelClassName" value="user"></property>
+</bean>
+<bean  id="UnLockUserCacheHandler" class="com.rapidbackend.core.process.handler.cache.UnlockCacheHandler">
+    <property name="redisCache" ref="UserCache"></property>
+    <property name="unlockIdListName" value="userIdsInDbQuery"></property>
+    <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property>
+</bean>
+
+<bean  id="MergeGroupFeedResultHandler" class="com.rapidbackend.socialutil.process.handler.merge.MergeFeedResultHandler">
+    <property name="idListParamName" value="fids"></property><!-- input id list name -->
+    <property name="modelTypeFinder" ref="SocialUtilModelTypeFinder"></property>
+</bean>
+
+<!-- handlers END -->
+<!-- GetFeeds END -->
+
+
+<bean id="GroupFeedCommentCounterConf"
+        class="com.rapidbackend.core.process.handler.counter.CounterConfig">
+        <property name="counterKeyPrefix" value="GroupFeedComment"></property>
+        <property name="redisCounterTarget" value="metadataCounter"></property>
+</bean>
+<bean id="GroupFeedRepostCounterConf"
+        class="com.rapidbackend.core.process.handler.counter.CounterConfig">
+        <property name="counterKeyPrefix" value="GroupFeedRepost"></property>
+        <property name="redisCounterTarget" value="metadataCounter"></property>
+</bean>
+
+</beans>

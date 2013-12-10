@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>dumb chatting room</title>
+</head>
+<body>
+    name :<input type="text" id="name" />
+    <br />
+    input: <input type="text" id="chat" />
+    <button id="submit">
+        send
+    </button>
+    <div id="chatRoom">
+
+    </div>
+    <script src="js/jquery.js"></script>
+    <script type="text/javascript">
+        $("#submit").click(function () {
+            var chat = $("#chat").val();
+            var name = $("#name").val();
+            var d = "chat=" + chat + "&name=" + name;
+
+            $.ajax({
+                type: 'POST',
+                url: "/chat",
+                contentType: "application/x-www-form-urlencoded;charset=UTF-8",
+                dataType: "text",
+                data: encodeURIComponent(d),
+                success: onSubmitSuccess,
+                error: onSubmitError
+            });
+        });
+        function onSubmitSuccess(jqXHR, textStatus, errorThrown) {
+
+        }
+        function onSubmitError() {
+
+        }
+
+        var timeout = setInterval(getChats, 1000);
+
+        function getChats() {
+            var d = "chat=" + chat + "&name=" + name;
+
+            $.ajax({
+                type: 'GET',
+                url: "/chat",
+                dataType: "text",
+                contentType: "application/x-www-form-urlencoded;charset=UTF-8",
+                data: encodeURIComponent(d),
+                success: onGetSuccess,
+                error: onSubmitError
+            });
+        }
+
+        function onGetSuccess(data, textStatus, jqXHR) {
+            
+            $("#chatRoom").html(unescape(decodeURIComponent(data)));
+        }
+    </script>
+</body>
+</html>
