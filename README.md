@@ -27,4 +27,5 @@ How to use:<br/>
 <br/>
 Current version is 0.1<br/>
 
+The search function and GEO function will be comitted in next release.
 More detailed documents coming soon<br/>
