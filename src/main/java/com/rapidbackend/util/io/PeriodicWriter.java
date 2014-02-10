@@ -22,8 +22,8 @@ import com.rapidbackend.core.context.AppContextAware;
  */
 public class PeriodicWriter extends AppContextAware{
 	
-	public static String Good_State = "good";
-	public static String Error_State = "error";
+	public static final String Good_State = "good";
+	public static final String Error_State = "error";
 	protected String fileName;
 	protected long interval;
 	protected ScheduledExecutorService scheduler;

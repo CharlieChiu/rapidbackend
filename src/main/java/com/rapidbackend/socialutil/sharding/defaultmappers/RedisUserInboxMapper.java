@@ -14,7 +14,7 @@ import com.rapidbackend.cache.CacheMapper;
  *
  */
 public class RedisUserInboxMapper implements CacheMapper{
-    public String DEFAULT_INBOX_TARGETNAME = "redisInbox";
+    public final String DEFAULT_INBOX_TARGETNAME = "redisInbox";
     
     protected String redisTargetName;
     

@@ -1,9 +1,9 @@
 package com.rapidbackend.socialutil.monitor;
 
 public class MBeanConfig {
-    protected static int DEFAULT_PORT = 7119;
-    protected static String DEFAULT_HOSTNAME="localhost";
-    protected static String DEFAULT_SERVICENAME="service:jmx:rmi:///jndi/rmi://127.0.0.1:7119/RapidbackendMBeanServer";
+    protected static final int DEFAULT_PORT = 7119;
+    protected static final String DEFAULT_HOSTNAME="localhost";
+    protected static final String DEFAULT_SERVICENAME="service:jmx:rmi:///jndi/rmi://127.0.0.1:7119/RapidbackendMBeanServer";
     boolean jmxEnabled = false;
     int port = DEFAULT_PORT;
     String hostname = DEFAULT_HOSTNAME;

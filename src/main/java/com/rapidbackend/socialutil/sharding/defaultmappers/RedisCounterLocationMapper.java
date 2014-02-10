@@ -6,7 +6,7 @@ package com.rapidbackend.socialutil.sharding.defaultmappers;
  *
  */
 public class RedisCounterLocationMapper {
-	public String DEFAULT_COUNTER_TARGETNAME = "metadataCounter";
+	public final String DEFAULT_COUNTER_TARGETNAME = "metadataCounter";
 	
 	/**
 	 * 

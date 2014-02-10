@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory;
 public class InstallServer {
     Logger logger = LoggerFactory.getLogger(getClass());
     
-    public static String contextPath = "/";
-    public static String resurceBaseFoler = "src/main/resources/install/web";
-    public static Integer port = 10888;
+    public static final String contextPath = "/";
+    public static final String resurceBaseFoler = "src/main/resources/install/web";
+    public static final Integer port = 10888;
     
     protected Server server;
     

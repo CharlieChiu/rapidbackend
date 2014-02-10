@@ -6,7 +6,7 @@ import java.util.TreeSet;
 import com.rapidbackend.cache.CacheMapper;
 
 public class FeedCacheMapper implements CacheMapper{
-    protected static String DEFAULT_TARGET = "feedCache";
+    protected static final String DEFAULT_TARGET = "feedCache";
     @Override
     public String getRedisTargetName(Object input){
         return DEFAULT_TARGET;

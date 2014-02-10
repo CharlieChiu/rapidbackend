@@ -32,8 +32,8 @@ public class InstallServlet extends HttpServlet{
      * 
      */
     private static final long serialVersionUID = -6992009001661467161L;
-    protected static String currentConfigFile = "src/main/resources/install/web/js/currentInstallConfig.js";
-    protected static String fieldTypeConfigFile = "src/main/resources/install/web/js/fieldTypeConfig.js";
+    protected static final String currentConfigFile = "src/main/resources/install/web/js/currentInstallConfig.js";
+    protected static final String fieldTypeConfigFile = "src/main/resources/install/web/js/fieldTypeConfig.js";
     protected static ObjectMapper objectMapper = new ObjectMapper();
     protected static HashMap<String, String> typeMapping;
     

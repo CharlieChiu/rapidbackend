@@ -6,7 +6,7 @@ import java.util.TreeSet;
 import com.rapidbackend.cache.CacheMapper;
 
 public class SessionCacheMapper implements CacheMapper{
-    public String DEFAULT_TARGETNAME = "sessionStore";
+    public final String DEFAULT_TARGETNAME = "sessionStore";
     @Override
     public String getRedisTargetName(Object input){
         return "sessionStore";

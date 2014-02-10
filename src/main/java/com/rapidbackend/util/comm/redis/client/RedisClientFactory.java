@@ -9,7 +9,7 @@ import com.rapidbackend.util.comm.redis.RedisException;
 import com.rapidbackend.util.comm.redis.client.Jedis;
 
 public class RedisClientFactory {
-    protected static Logger logger = LoggerFactory.getLogger(RedisClientFactory.class);
+    protected static final Logger logger = LoggerFactory.getLogger(RedisClientFactory.class);
 	/**
 	 * create redis client
 	 * @param profile

@@ -6,7 +6,7 @@ import java.util.TreeSet;
 import com.rapidbackend.cache.CacheMapper;
 
 public class SubscriptionCacheMapper implements CacheMapper{
-    public String DEFAULT_TARGETNAME = "subscriptionCache";
+    public final String DEFAULT_TARGETNAME = "subscriptionCache";
     @Override
     public String getRedisTargetName(Object input){
         return DEFAULT_TARGETNAME;

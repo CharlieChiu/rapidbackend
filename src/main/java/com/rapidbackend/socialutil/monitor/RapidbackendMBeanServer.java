@@ -27,7 +27,7 @@ public class RapidbackendMBeanServer extends AppContextAware{
             .getName());
     ConcurrentHashMap<String,SocialServiceMBean> serviceMBeans = new ConcurrentHashMap<String,SocialServiceMBean>();
     ConcurrentHashMap<String,SocialHandlerMBean> handerMBeans = new ConcurrentHashMap<String,SocialHandlerMBean>();
-    private static String DEFAULT_DOMAIN = "Rapidbackend";
+    private static final String DEFAULT_DOMAIN = "Rapidbackend";
     private MBeanServer mBeanServer = null;
     private JMXConnectorServer jmxConnectorServer = null;
     

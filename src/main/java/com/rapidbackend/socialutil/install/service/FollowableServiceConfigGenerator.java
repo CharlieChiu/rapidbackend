@@ -16,12 +16,12 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 
 public class FollowableServiceConfigGenerator {
-    protected static String templateFoder = "src/main/resources/dbInstall/model/templates/services";
-    protected static String tempalteFile = "followableServices.xml";
-    protected static String serviceCmdMappingTemplateFile = "serviceCommandMap.js";
+    protected static final String templateFoder = "src/main/resources/dbInstall/model/templates/services";
+    protected static final String tempalteFile = "followableServices.xml";
+    protected static final String serviceCmdMappingTemplateFile = "serviceCommandMap.js";
     //protected static String outPutFile = "src/main/resources/config/groupService.xml";
-    protected static String outputDir = "src/main/resources/config/";
-    protected static String serviceCmdMappingOutputFile = "src/main/resources/config/serviceCommandMap.js";
+    protected static final String outputDir = "src/main/resources/config/";
+    protected static final String serviceCmdMappingOutputFile = "src/main/resources/config/serviceCommandMap.js";
     //protected static String followable = "Group";
     protected Configuration configuration =  new Configuration();
     

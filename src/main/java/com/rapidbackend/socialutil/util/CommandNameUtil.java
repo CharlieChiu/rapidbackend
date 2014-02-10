@@ -7,5 +7,5 @@ package com.rapidbackend.socialutil.util;
 @Deprecated
 public class CommandNameUtil {
     
-    public static String SUBSCRIBEUSER = "SubscribeUser";
+    public static final String SUBSCRIBEUSER = "SubscribeUser";
 }

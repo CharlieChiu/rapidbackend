@@ -2,7 +2,7 @@ apply plugin: 'java'
 
 apply plugin: 'eclipse'
 
-description = """rapidbackend"""
+description = "rapidbackend"
 
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
@@ -110,7 +110,7 @@ task(compileModels,dependsOn:['generateModels'],type:Exec){
     if (System.properties['os.name'].toLowerCase().contains('windows')) {
         commandLine "./gradlew.bat", "compileJava" // testing build on windows
     } else {
-        commandLine "./gradlew", "compileJava"
+        commandLine "gradle", "compileJava"
     }
     
 }
@@ -132,6 +132,7 @@ task(startRedisInstances){
     if(!scriptFile.exists()){
         throw new RuntimeException("no startRedis script: "+startScript+ " found")
     }else{
+        if (!System.properties['os.name'].toLowerCase().contains('windows')) {
         scriptFile.setExecutable(true)
         if(!scriptFile.canExecute()){
             throw new RuntimeException("startRedis script: "+startScript + " doesn't have executable permission")
@@ -140,7 +141,8 @@ task(startRedisInstances){
         def proc = command.execute()
         proc.waitFor()
         
-        println(proc.exitValue())  
+        println(proc.exitValue())
+       }
     }  
 }
 
@@ -151,7 +153,3 @@ task(testInstallation,dependsOn:['generateServices','startRedisInstances','test'
 task(startRapidbackend,dependsOn:['startRedisInstances']){
     
 }
-
-
-
-

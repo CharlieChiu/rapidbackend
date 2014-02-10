@@ -1,1 +1,0 @@
-{"varchar":"varchar(255)","int":"int","long":"LONG","float":"FLOAT","text":"LONGTEXT"}
