@@ -68,7 +68,7 @@ exclude(module: 'slf4j-jdk14')
     compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version:'8.1.4.v20120524'
     compile group: 'org.eclipse.jetty', name: 'jetty-servlets', version:'8.1.4.v20120524'
     compile group: 'org.eclipse.jetty', name: 'jetty-webapp', version:'8.1.4.v20120524'
-    compile group: 'io.netty', name: 'netty', version:'3.7.0.Final'
+    compile group: 'io.netty', name: 'netty', version:'3.9.0.Final'
     compile group: 'com.carrotsearch.randomizedtesting', name: 'randomizedtesting-runner', version:'2.0.2'
     compile group: 'com.carrotsearch.randomizedtesting', name: 'junit4-maven-plugin', version:'2.0.2'
     compile group: 'org.freemarker', name: 'freemarker', version:'2.3.19'
